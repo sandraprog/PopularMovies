@@ -1,0 +1,27 @@
+<resources>
+    <string name="api_key">xxx</string>
+    <string name="app_name">Popular Movies 2</string>
+    <string name="release_date_text">Release Date:</string>
+    <string name="movie_poster_text">Movie Poster</string>
+    <string name="vote_average_text">Vote Average:</string>
+    <string name="overview_text">Overview:</string>
+    <string name="no_data_text">There is no data for this item</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="pref_sort_order_label">Sort Order</string>
+    <string name="pref_sort_order_summary">Choose sort order</string>
+    <string name="pref_sort_order_key">sortOrder</string>
+    <string name="pref_most_popular">Most Popular</string>
+    <string name="pref_highest_rated">Highest Rated</string>
+    <string name="pref_favorites">Favorites</string>
+    <string name="error_no_data_from_retrofit">Something wrong :(</string>
+    <string name="menu_text_sort_popular">Sort by most popular</string>
+    <string name="menu_text_sort_rated">Sort by rating</string>
+    <string name="menu_text_favorites">Show all favorites</string>
+    <string name="trailers_text">Trailers:</string>
+    <string name="reviews_text">Reviews:</string>
+    <string name="added_favorite_text">Added to your favorite movies!</string>
+    <string name="menu_text_show_favorites">Show Favorites</string>
+    <string name="favorite_text">Favorite</string>
+    <string name="not_favorite_text">Mark as favorite</string>
+</resources>
