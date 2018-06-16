@@ -191,9 +191,13 @@ public class DetailActivity extends AppCompatActivity {
         call.enqueue(new Callback<TrailersList>() {
             @Override
             public void onResponse(Call<TrailersList> call, Response<TrailersList> response) {
-                List<Trailer> movies = response.body().getResults();
-                mTrailersRecycleView.setAdapter(new TrailersAdapter(getApplicationContext(), movies));
-                mTrailersRecycleView.smoothScrollToPosition(0);
+                if (response.isSuccessful()) {
+                    List<Trailer> movies = response.body().getResults();
+                    mTrailersRecycleView.setAdapter(new TrailersAdapter(getApplicationContext(), movies));
+                    mTrailersRecycleView.smoothScrollToPosition(0);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -207,9 +211,13 @@ public class DetailActivity extends AppCompatActivity {
         call2.enqueue(new Callback<ReviewsList>() {
             @Override
             public void onResponse(Call<ReviewsList> call2, Response<ReviewsList> response) {
-                List<Review> reviews = response.body().getResults();
-                mReviewsRecycleView.setAdapter(new ReviewsAdapter(getApplicationContext(), reviews));
-                mReviewsRecycleView.smoothScrollToPosition(0);
+                if (response.isSuccessful()) {
+                    List<Review> reviews = response.body().getResults();
+                    mReviewsRecycleView.setAdapter(new ReviewsAdapter(getApplicationContext(), reviews));
+                    mReviewsRecycleView.smoothScrollToPosition(0);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

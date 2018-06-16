@@ -5,11 +5,13 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,26 +35,24 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MoviesAdapter mAdapter;
-    private List<Movie> mList;
+    private ArrayList<Movie> mList;
     private SharedPreferences preferences;
-    private Menu mOptionsMenu;
 
-    private FavDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mDb = FavDatabase.getInstance(getApplicationContext());
-        initViews();
+        initViews(savedInstanceState);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        sortMovies();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("State", mList);
     }
+
 
     private void setupViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-        mOptionsMenu = menu;
         return true;
     }
 
@@ -97,18 +96,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initViews() {
+    private void initViews(Bundle savedInstanceState) {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
-        mList = new ArrayList<>();
+        if (savedInstanceState != null) {
+            mList = savedInstanceState.getParcelableArrayList("State");
+        } else {
+            mList = new ArrayList<>();
+        }
+
         mAdapter = new MoviesAdapter(this, mList);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
         else
             mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 4));
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+
+        if (mList != null && mList.size() != 0) {
+            mAdapter.setMovies(mList);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            sortMovies();
+        }
     }
 
     private void loadJSON(String sortOrder) {
@@ -126,9 +135,12 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<MoviesList>() {
             @Override
             public void onResponse(Call<MoviesList> call, Response<MoviesList> response) {
-                List<Movie> movies = response.body().getResults();
-                mRecyclerView.setAdapter(new MoviesAdapter(getApplicationContext(), movies));
-                mRecyclerView.smoothScrollToPosition(0);
+                if (response.isSuccessful()) {
+                    List<Movie> movies = response.body().getResults();
+                    mRecyclerView.setAdapter(new MoviesAdapter(getApplicationContext(), movies));
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_network, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
