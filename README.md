@@ -16,3 +16,7 @@ The task was to create a **Popular Movies App** that will load a list of movies 
 - **Architecture Components**: Room, LiveData and ViewModel
 - [Retrofit2](https://github.com/square/retrofit)
 - [Picasso](http://square.github.io/picasso/)
+
+![Poster1](https://github.com/sandraprog/PopularMovies/raw/master/poster1.jpg)
+
+![Poster2](https://github.com/sandraprog/PopularMovies/raw/master/poster2.jpg)
